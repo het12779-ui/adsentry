@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+
+      - name: Run tests
+        run: python -m pytest -q
+
+  smoke:
+    name: Container smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install runtime dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Boot the server and exercise the API
+        env:
+          ADSENTRY_SEED: "1"
+          ADSENTRY_DEMO: "1"
+          DATABASE_URL: "sqlite:///./smoke.db"
+        run: |
+          set -euo pipefail
+          python -m uvicorn adsentry.main:app --app-dir src --port 8030 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID' EXIT
+
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8030/healthz > /dev/null; then break; fi
+            sleep 1
+          done
+
+          curl -fsS http://127.0.0.1:8030/healthz
+          curl -fsS -H "X-Account-Id: 1" http://127.0.0.1:8030/api/v1/campaigns > /dev/null
+          curl -fsS -H "X-Account-Id: 1" http://127.0.0.1:8030/api/v1/incidents > /dev/null
+          curl -fsS -H "X-Account-Id: 1" "http://127.0.0.1:8030/api/v1/logs?q=postback" > /dev/null
+          curl -fsS http://127.0.0.1:8030/ | grep -q "AdSentry"
+          echo "smoke test passed"
