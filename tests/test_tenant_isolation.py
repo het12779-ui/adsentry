@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import datetime, timedelta, timezone
 
 from fastapi.testclient import TestClient
 
@@ -9,7 +9,7 @@ from adsentry.db import Base
 from adsentry.main import create_app
 from tests.conftest import make_campaign
 
-TODAY = date.today()
+TODAY = datetime.now(timezone.utc).date()
 
 
 def _log(client, uid, message):

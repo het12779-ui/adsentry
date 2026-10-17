@@ -41,9 +41,10 @@ export function shortDay(iso) {
 }
 
 export function todayISO() {
-  const now = new Date();
-  const offset = now.getTimezoneOffset() * 60000;
-  return new Date(now.getTime() - offset).toISOString().slice(0, 10);
+  // The services date their data in UTC (see `utcnow` in every model), so the
+  // dashboard must ask for the same day. Using the browser's local date puts
+  // the user a day ahead of the data for the first hours after local midnight.
+  return new Date().toISOString().slice(0, 10);
 }
 
 export const KIND_LABELS = {

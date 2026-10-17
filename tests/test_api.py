@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import datetime, timedelta, timezone
 
 from tests.conftest import make_campaign
 
-TODAY = date.today()
+TODAY = datetime.now(timezone.utc).date()
 
 
 def post_metric(client, external_id, day, impressions, clicks, conversions, spend):

@@ -22,7 +22,7 @@ import math
 import random
 import uuid
 from dataclasses import dataclass
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, time, timedelta, timezone
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -200,7 +200,7 @@ def seed_demo(session: Session, today: date | None = None, force: bool = False) 
     if not force and session.scalar(select(func.count(Account.id))) > 0:
         return False
 
-    today = today or date.today()
+    today = today or datetime.now(timezone.utc).date()
     rng = random.Random(20261017)
 
     accounts: dict[str, Account] = {}
