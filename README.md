@@ -8,6 +8,11 @@ AdSentry watches daily delivery metrics for every campaign in every tenant,
 turns statistical and rule-based findings into **stateful incidents**, and gives
 you a log search that answers *why* without standing up an ELK cluster.
 
+[![CI](https://github.com/het12779-ui/adsentry/actions/workflows/ci.yml/badge.svg)](https://github.com/het12779-ui/adsentry/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12-3776AB)
+![Tests](https://img.shields.io/badge/tests-39%20passing-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
 ```bash
 make install && make run     # http://127.0.0.1:8030
 ```
