@@ -20,6 +20,8 @@ make install && make run     # http://127.0.0.1:8030
 Two seeded tenants, six campaigns, a realistic incident feed, and 260 searchable
 log events. No external services, no Docker required to look at it.
 
+![AdSentry dashboard: delivery health with 14-day sparklines and the incident feed](docs/screenshots/dashboard.webp)
+
 ---
 
 ## Why this exists
@@ -223,7 +225,10 @@ curl -s -H "X-Account-Id: 1" \
 ## Dashboard
 
 Single-page dashboard, no build step: plain ES modules, server-served, ~600
-lines of hand-written JS.
+lines of hand-written JS. The two screenshots above and below are the actual
+seeded demo, not mockups.
+
+![Log search: two-token AND semantics with the server-reported query time](docs/screenshots/log-search.webp)
 
 - **Campaign health grid** — today vs. baseline with a 14-day inline sparkline,
   colour-coded by z-score direction; click through to the day-by-day series.
@@ -232,7 +237,17 @@ lines of hand-written JS.
 - **Log explorer** — query bar with token AND semantics, level filter, and the
   server-reported query time; each result expands to its structured fields.
 - **"Run detection"** button — calls `evaluate` and refreshes the feed, so the
-  demo shows detect → triage → resolve without restarting anything.
+demo shows detect → triage → resolve without restarting anything.
+
+Design notes:
+
+- the sparkline is the *evidence* for the state pill beside it — the CLT collapse
+  on Marketplace Push is the cliff, the `1 critical` pill is the conclusion;
+- incident cards are ordered by severity and every one states observed vs.
+  baseline, so triage does not require opening another view;
+- motion is ambient and entrance-only, and `prefers-reduced-motion` disables it;
+- every panel is keyboard reachable; the search input and level filter stay
+  in the URL-less local state, so nothing about a query is hidden.
 
 ---
 

@@ -240,6 +240,19 @@ const App = {
         </div>
       </main>
 
+      <footer class="app-footer">
+        <span class="footer-brand">AdSentry</span>
+        <span class="footer-rule"></span>
+        <span>{{ campaigns.length }} campaigns monitored</span>
+        <span>{{ incidents.length }} open incidents</span>
+        <span>{{ logResult ? logResult.total : 0 }} log events</span>
+        <span class="footer-gap"></span>
+        <span class="footer-live" :class="{ 'is-down': error }">
+          <i></i>{{ error ? 'API unreachable' : 'API connected' }}
+        </span>
+        <span class="footer-mono">as of {{ asOf }}</span>
+      </footer>
+
       <div v-if="toast" class="toast" role="status">{{ toast }}</div>
     </div>
   `,
