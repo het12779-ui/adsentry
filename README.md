@@ -225,8 +225,10 @@ curl -s -H "X-Account-Id: 1" \
 ## Dashboard
 
 Single-page dashboard, no build step: plain ES modules, server-served, ~600
-lines of hand-written JS. The two screenshots above and below are the actual
+lines of hand-written JS. The screenshots above and below are the actual
 seeded demo, not mockups.
+
+![Load animation: panels rise, sparklines fade in, the critical beacon pulses](docs/screenshots/motion.gif)
 
 ![Log search: two-token AND semantics with the server-reported query time](docs/screenshots/log-search.webp)
 
